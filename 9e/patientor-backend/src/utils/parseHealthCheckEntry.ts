@@ -13,11 +13,11 @@ const parseHealthCheckRating = (healthCheckRating: unknown): number => {
 
 type HealthCheckSubProperties = {
   healthCheckRating: number;
-}
+};
 
 const parseHealthCheckEntry = (entry: unknown): HealthCheckSubProperties => {
   if (!entry || typeof entry !== "object") {
-    throw new Error("Incorrect or missing data");
+    throw new Error("Incorrect or missing health check entry");
   }
 
   if ("healthCheckRating" in entry) {
@@ -25,7 +25,7 @@ const parseHealthCheckEntry = (entry: unknown): HealthCheckSubProperties => {
       healthCheckRating: parseHealthCheckRating(entry.healthCheckRating)
     });
   } else {
-    throw new Error("Incorrect or missing data");
+    throw new Error("Incorrect or missing health check entry");
   }
 };
 

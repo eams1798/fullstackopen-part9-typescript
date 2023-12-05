@@ -13,7 +13,7 @@ const parseHealthCheckRating = (healthCheckRating: unknown): number => {
 
 type HealthCheckSubProperties = {
   healthCheckRating: number;
-}
+};
 
 const parseHealthCheckEntry = (entry: unknown): HealthCheckSubProperties => {
   if (!entry || typeof entry !== "object") {

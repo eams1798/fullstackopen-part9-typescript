@@ -1,4 +1,6 @@
+import { Diagnose } from "../types";
 import { isString, parseDate } from "../utils";
+import Diagnoses from "../data/diagnoses";
 
 const parseCriteria = (criteria: unknown): string => {
   if (!criteria || !isString(criteria)) {
@@ -23,25 +25,30 @@ const parseDischarge = (discharge: unknown): { date: string; criteria: string } 
   };
 };
 
-const areDiagnosisCodes = (param: unknown): param is Array<string> => {
-  return Array.isArray(param) && param.every(code => isString(code));
+const isDiagnoseCode = (param: unknown): param is Diagnose["code"] => {
+  const diagnosisCodes = Diagnoses.map(d => d.code);
+  return isString(param) && diagnosisCodes.includes(param);
 };
 
-const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<string> => {
+const areDiagnosisCodes = (param: unknown): param is Array<string> => {
+  return Array.isArray(param) && param.every(code => isDiagnoseCode(code) && code !== "");
+};
+
+const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<Diagnose["code"]> => {
   if (!areDiagnosisCodes(diagnosisCodes)) {
-    throw new Error("Incorrect or missing diagnosis codes");
+    throw new Error("Incorrect diagnosis codes");
   }
   return diagnosisCodes;
 };
 
 type HospitalSubProperties = {
   discharge: { date: string; criteria: string };
-  diagnosisCodes?: Array<string>;
-}
+  diagnosisCodes?: Array<Diagnose["code"]>;
+};
 
 const parseHospitalEntry = (entry: unknown): HospitalSubProperties => {
   if (!entry || typeof entry !== "object") {
-    throw new Error("Incorrect or missing entry");
+    throw new Error("Incorrect or missing hospital entry");
   }
   if ("discharge" in entry) {
     const subProperties: HospitalSubProperties = {
@@ -49,10 +56,12 @@ const parseHospitalEntry = (entry: unknown): HospitalSubProperties => {
     };
     if ("diagnosisCodes" in entry) {
       subProperties.diagnosisCodes = parseDiagnosisCodes(entry.diagnosisCodes);
+    } else {
+      subProperties.diagnosisCodes = [] as Array<Diagnose["code"]>;
     }
     return subProperties;
   } else {
-    throw new Error("Incorrect or missing entry");
+    throw new Error("Incorrect or missing hospital entry");
   }
 };
 

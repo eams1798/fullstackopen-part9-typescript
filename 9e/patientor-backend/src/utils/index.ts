@@ -3,7 +3,7 @@ import { validate as isUUID } from "uuid";
 export const isDate = (param: string): boolean => {
   /* string matches with YYYY-MM-DD */
   const regex = /^\d{4}-\d{2}-\d{2}$/;
-  return regex.test(param);
+  return regex.test(param) && !isNaN(Date.parse(param));
 };
 
 export const isString = (text: unknown): text is string => {

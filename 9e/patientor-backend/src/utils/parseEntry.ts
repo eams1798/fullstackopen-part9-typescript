@@ -57,6 +57,7 @@ const parseEntry = (entry: unknown): EntryWithoutId => {
   if (!entry || typeof entry !== "object") {
     throw new Error("Incorrect or missing entry");
   }
+  
   if ("type" in entry
       && "specialist" in entry
       && "description" in entry

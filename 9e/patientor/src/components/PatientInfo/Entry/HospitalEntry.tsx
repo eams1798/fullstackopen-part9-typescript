@@ -13,7 +13,7 @@ const HospitalEntryInfo = ({ entry, diagnosis }: IHospitalEntryProps) => {
       <p key="discharge">Discharge: {entry.discharge.date} {entry.discharge.criteria}</p>
       {entry.diagnosisCodes? (
       <div key="diagnosisCodes">
-        <p>Diagnosis codes:</p>
+        {entry.diagnosisCodes.length > 0 && <p>Diagnosis codes:</p>}
         <ul>
         {entry.diagnosisCodes.map((code) => (
           <li key={code}>{code} {diagnosis.find(d => d.code === code)?.name}</li>

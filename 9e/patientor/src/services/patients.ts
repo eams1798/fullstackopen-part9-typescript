@@ -1,8 +1,9 @@
 import axios from "axios";
-import { Patient, PatientFormValues } from "../types";
+import { Entry, EntryWithoutId, Patient, PatientFormValues } from "../types";
 
 import { apiBaseUrl } from "../constants";
 import parsedPatient from "../utils/parsedItem";
+import parseEntry from "../utils/parseEntry";
 
 const getAll = async (): Promise<Patient[]> => {
   let { data } = await axios.get<Patient[]>(
@@ -30,7 +31,20 @@ const create = async (object: PatientFormValues) => {
   return data;
 };
 
+const addEntry = async (patientId: string, object: EntryWithoutId): Promise<Entry> => {
+  const { data } = await axios.post<Patient>(
+    `${apiBaseUrl}/patients/${patientId}/entries`,
+    object
+  );
+
+  const returnedData = {
+    ...parseEntry(data),
+    id: data.id,
+  };
+  return returnedData;
+};
+
 export default {
-  getAll, getPatientById, create
+  getAll, getPatientById, create, addEntry
 };
 

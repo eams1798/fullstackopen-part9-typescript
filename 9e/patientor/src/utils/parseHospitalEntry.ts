@@ -1,3 +1,4 @@
+import { Diagnosis } from "../types";
 import { isString, parseDate } from "../utils";
 
 const parseCriteria = (criteria: unknown): string => {
@@ -24,10 +25,10 @@ const parseDischarge = (discharge: unknown): { date: string; criteria: string } 
 };
 
 const areDiagnosisCodes = (param: unknown): param is Array<string> => {
-  return Array.isArray(param) && param.every(code => isString(code));
+  return Array.isArray(param) && param.every(code => isString(code) && code !== "");
 };
 
-const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<string> => {
+const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<Diagnosis["code"]> => {
   if (!areDiagnosisCodes(diagnosisCodes)) {
     throw new Error("Incorrect or missing diagnosis codes");
   }
@@ -36,7 +37,7 @@ const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<string> => {
 
 type HospitalSubProperties = {
   discharge: { date: string; criteria: string };
-  diagnosisCodes?: Array<string>;
+  diagnosisCodes?: Array<Diagnosis["code"]>;
 };
 
 const parseHospitalEntry = (entry: unknown): HospitalSubProperties => {
@@ -49,6 +50,8 @@ const parseHospitalEntry = (entry: unknown): HospitalSubProperties => {
     };
     if ("diagnosisCodes" in entry) {
       subProperties.diagnosisCodes = parseDiagnosisCodes(entry.diagnosisCodes);
+    } else {
+      subProperties.diagnosisCodes = [] as Array<Diagnosis["code"]>;
     }
     return subProperties;
   } else {

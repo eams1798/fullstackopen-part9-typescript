@@ -1,3 +1,4 @@
+import { Diagnosis } from "../types";
 import { isDate, isString } from "../utils";
 
 const parseEmployerName = (employerName: unknown): string => {
@@ -38,10 +39,10 @@ const parseSickLeave = (sickLeave: unknown): { startDate: string; endDate: strin
 };
 
 const areDiagnosisCodes = (param: unknown): param is Array<string> => {
-  return Array.isArray(param) && param.every(code => isString(code));
+  return Array.isArray(param) && param.every(code => isString(code) && code !== "");
 };
 
-const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<string> => {
+const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<Diagnosis["code"]> => {
   if (!areDiagnosisCodes(diagnosisCodes)) {
     throw new Error("Incorrect or missing diagnosis codes");
   }
@@ -69,10 +70,9 @@ const parseOccupationalHealthcareEntry = (entry: unknown): OccupationalHealthcar
       };
     }
     if ("diagnosisCodes" in entry) {
-      subProperties = {
-        ...subProperties,
-        diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes)
-      };
+      subProperties.diagnosisCodes = parseDiagnosisCodes(entry.diagnosisCodes);
+    } else {
+      subProperties.diagnosisCodes = [] as Array<Diagnosis["code"]>;
     }
     return subProperties;
   } else {

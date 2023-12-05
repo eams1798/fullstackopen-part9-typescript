@@ -53,6 +53,10 @@ export interface Patient {
   entries: Entry[];
 }
 
+export interface INotification {
+  type: "" | "success" | "error";
+  message: string;
+}
 
 export type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
 export type EntryWithoutId = UnionOmit<Entry, "id">;

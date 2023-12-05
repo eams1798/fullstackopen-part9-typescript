@@ -2,11 +2,14 @@ import { Patient } from "../../types";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import EntryInfo from "./Entry";
+import NewEntry from "./Entry/NewEntry";
+import { Container, Divider } from "@mui/material";
 
 interface IPatientInfoProps {
-  patient: Patient
+  patient: Patient;
+  setPatients: React.Dispatch<React.SetStateAction<Patient[]>>
 }
-const PatientInfo = ({ patient } : IPatientInfoProps) => {
+const PatientInfo = ({ patient, setPatients } : IPatientInfoProps) => {
   return (
     <div className="patient">
       <section className="basic-info">
@@ -20,11 +23,15 @@ const PatientInfo = ({ patient } : IPatientInfoProps) => {
           <>
             <h3>entries</h3>
             {patient.entries.map((entry) => (
-            <EntryInfo entry={entry} key={entry.id} />
+            <Container key={entry.id} >
+              <EntryInfo entry={entry} />
+              <Divider />
+            </Container>
             ))}
           </>
         )
         : <p>No entries</p>}
+        <NewEntry setPatients={setPatients} patientId={patient.id} />
       </section>
     </div>
   );

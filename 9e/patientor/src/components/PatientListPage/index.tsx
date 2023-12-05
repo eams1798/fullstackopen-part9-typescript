@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material';
 
@@ -19,8 +19,6 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
-
-
 
   const openModal = (): void => setModalOpen(true);
 
@@ -49,10 +47,6 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
       }
     }
   };
-
-  useEffect(() => {
-    console.log(patients);
-  }, [patients]);
 
   return (
     <div className="App">

@@ -67,9 +67,9 @@ const parseEntry = (entry: unknown): EntryWithoutId => {
     delete restOfSubProperties.date;
   
     return ({
+      date: parseDate(entry.date),
       specialist: parseSpecialist(entry.specialist),
       description: parseDescription(entry.description),
-      date: parseDate(entry.date),
       ...parseEntrySubProperties(entry.type, restOfSubProperties),
     });
   } else {
